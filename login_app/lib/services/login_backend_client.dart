@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart' as http;
-
 import '../exceptions/login_backend_client_exceptions.dart';
 import '../models/user_data.dart';
 
@@ -34,8 +32,7 @@ class LoginBackendClient {
       );
       return returnResponseOrThrowException(response);
     } on IOException catch (e) {
-      print(e.toString());
-      throw NetworkException();
+      throw NetworkException('There was a Network disruption. Please try again later.');
     }
   }
 
@@ -52,16 +49,17 @@ class LoginBackendClient {
 
       return returnResponseOrThrowException(response);
     } on IOException catch (e) {
-      print(e.toString());
-      throw NetworkException();
+      throw NetworkException('There was a Network disruption. Please try again later.');
     }
   }
 
   http.Response returnResponseOrThrowException(http.Response response) {
     if (response.statusCode == 404) {
-      throw ItemNotFoundException();
+      throw ItemNotFoundException(
+          'The item was not found in our current Database. Please contact our administrator.');
     } else if (response.statusCode > 400) {
-      throw UnKnowApiException(response.statusCode);
+      throw UnKnowApiException(
+          response.statusCode, 'There was an unexpected error from our servers. Please try again later.');
     } else {
       return response;
     }

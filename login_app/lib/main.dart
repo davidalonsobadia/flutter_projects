@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_app/screens/login.dart';
 import 'package:login_app/screens/splash.dart';
 import 'package:login_app/screens/user_menu.dart';
+import 'package:login_app/widgets/decoration.dart';
 
+import 'auth_stream.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,10 +17,22 @@ void main() async {
   runApp(const App());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  final AuthStream authStream = AuthStream();
+
+  @override
+  void dispose() {
+    authStream.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,17 +46,27 @@ class App extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(),
       ),
       home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: authStream.authControllerStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SplashScreen();
           }
-
           if (snapshot.hasData) {
-            // if logged in user, then snapshot gets data
-            return const UserMenuScreen();
+            switch (snapshot.data) {
+              case AuthState.loading:
+                return const SplashScreen();
+              case AuthState.success:
+                return UserMenuScreen(authStream: authStream);
+              default:
+                return LoginScreen(authStream: authStream);
+            }
           }
-          return const LoginScreen();
+
+          if (snapshot.hasError) {
+            return LoginScreen(authStream: authStream, error: snapshot.error);
+          }
+
+          return LoginScreen(authStream: authStream);
         },
       ),
     );

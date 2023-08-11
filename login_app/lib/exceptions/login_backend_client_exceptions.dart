@@ -1,9 +1,24 @@
-class UnKnowApiException implements Exception {
+import 'package:login_app/exceptions/login_exception.dart';
+
+class UnKnowApiException implements LoginException {
   int httpCode;
 
-  UnKnowApiException(this.httpCode);
+  @override
+  String message;
+
+  UnKnowApiException(this.httpCode, this.message);
 }
 
-class ItemNotFoundException implements Exception {}
+class ItemNotFoundException implements LoginException {
+  @override
+  String message;
 
-class NetworkException implements Exception {}
+  ItemNotFoundException(this.message);
+}
+
+class NetworkException implements LoginException {
+  @override
+  String message;
+
+  NetworkException(this.message);
+}

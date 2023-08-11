@@ -1,17 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:login_app/exceptions/login_exception.dart';
 import 'package:login_app/screens/signup.dart';
 
-import '../models/user_data.dart';
-import '../services/login_backend_client.dart';
+import '../auth_stream.dart';
 import '../widgets/decoration.dart';
 
-final _auth = FirebaseAuth.instance;
-
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    required this.authStream,
+    this.error,
+  });
+
+  final AuthStream authStream;
+  final Object? error;
 
   @override
   State<StatefulWidget> createState() {
@@ -23,97 +26,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
   var _enteredEmail = '';
   var _enteredPassword = '';
-  var _isAuthenticating = false;
-
-  void _signInWithGoogle() async {
-    setState(() {
-      _isAuthenticating = true;
-    });
-
-    late String name, email, uid;
-
-    try {
-      GoogleSignIn _googleSignIn = GoogleSignIn();
-      GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-      if (googleSignInAccount == null) {
-        print('error getting google sign in account');
-        return;
-      }
-
-      GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-      AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
-
-      var result = (await _auth.signInWithCredential(credential));
-      uid = result.user!.uid;
-      email = googleSignInAccount.email;
-      name = googleSignInAccount.displayName ?? 'user_name_not_provided';
-    } catch (e) {
-      clearAndShowSnackBar(context, 'Google Sign in Failed');
-      setState(() {
-        _isAuthenticating = false;
-      });
-      return;
-    }
-
-    try {
-      // All this code that is executed after _auth.signInWithCredential, will be executed when the auth
-      // state changes, then the mounted tree of the Wdigets have changed as well.
-      // We need to find another solution to handle errors and this code when authstate changes. Otherwise
-      // we could end up in an undesired state
-      final userData = UserData(id: uid, name: name, email: email, provider: 'google');
-      LoginBackendClient loginBackendClient = LoginBackendClient('10.0.2.2:5000');
-      final response = await loginBackendClient.registerUser(userData);
-
-      // these checks and handled errors are wrong, since the widget tree will have changed when the code reaches that point
-
-      if (response.statusCode != 201 && response.statusCode != 200) {
-        _auth.signOut();
-        clearAndShowSnackBar(
-            context, 'Something went wrong when creating your user. Please try again later.');
-        return;
-      }
-    } on Exception catch (_) {
-      _auth.signOut();
-      setState(() {
-        _isAuthenticating = false;
-      });
-      clearAndShowSnackBar(context, 'Authentication failed.');
-    }
-
-    return;
-  }
 
   void _signInWithEmailAndPassword() async {
     final isValid = _form.currentState!.validate();
-
     if (!isValid) {
       // show error message
       return;
     }
     _form.currentState!.save();
 
-    setState(() {
-      _isAuthenticating = true;
-    });
-
-    try {
-      await _auth.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
-    } on FirebaseAuthException catch (error) {
-      setState(() {
-        _isAuthenticating = false;
-      });
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Authentication failed.'),
-        ),
-      );
-    }
+    await widget.authStream.signInWithEmailAndPassword(_enteredEmail, _enteredPassword);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.error != null) {
+      LoginException exception = widget.error as LoginException;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(exception.message),
+          ),
+        );
+      });
+    }
+
     Widget content = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SafeArea(
@@ -235,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: _signInWithGoogle,
+                      onPressed: widget.authStream.signInWithGoogle,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -296,12 +233,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-
-    if (_isAuthenticating) {
-      content = const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
