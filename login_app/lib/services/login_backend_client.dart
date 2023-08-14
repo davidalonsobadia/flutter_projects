@@ -31,7 +31,7 @@ class LoginBackendClient {
         },
       );
       return returnResponseOrThrowException(response);
-    } on IOException catch (e) {
+    } on IOException {
       throw NetworkException('There was a Network disruption. Please try again later.');
     }
   }
@@ -48,7 +48,7 @@ class LoginBackendClient {
       );
 
       return returnResponseOrThrowException(response);
-    } on IOException catch (e) {
+    } on IOException {
       throw NetworkException('There was a Network disruption. Please try again later.');
     }
   }
