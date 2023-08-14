@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUpScreen> {
         _isRegisteredDone = true;
       });
     } on Exception catch (_) {
-      clearAndShowSnackBar(context, 'Authentication failed.');
+      clearAndShowSnackBar(context, 'Signup failed.');
       setState(() {
         _isAuthenticating = false;
         _isRegisteredDone = true;

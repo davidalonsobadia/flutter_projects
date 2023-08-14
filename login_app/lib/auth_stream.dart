@@ -37,8 +37,15 @@ class AuthStream {
       _authController.add(AuthState.loading);
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       _authController.add(AuthState.success);
-    } catch (exception) {
-      _authController.addError(exception);
+    } on FirebaseAuthException catch (exception) {
+      EmailPasswordSignInException emailPasswordException;
+      if (exception.message != null) {
+        emailPasswordException = EmailPasswordSignInException(exception.message!);
+      } else {
+        emailPasswordException = EmailPasswordSignInException(
+            'There was an error when siging in with Email and Password. Please try again later.');
+      }
+      _authController.addError(emailPasswordException);
     }
   }
 

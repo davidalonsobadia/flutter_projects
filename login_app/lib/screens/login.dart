@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_app/exceptions/login_exception.dart';
 import 'package:login_app/screens/signup.dart';
 
 import '../auth_stream.dart';
@@ -10,11 +9,9 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
     required this.authStream,
-    this.error,
   });
 
   final AuthStream authStream;
-  final Object? error;
 
   @override
   State<StatefulWidget> createState() {
@@ -40,17 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.error != null) {
-      LoginException exception = widget.error as LoginException;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(exception.message),
-          ),
-        );
-      });
-    }
-
     Widget content = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SafeArea(

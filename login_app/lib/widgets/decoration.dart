@@ -10,11 +10,11 @@ InputDecoration textFormFieldInputDecoration({required String hintText}) {
       borderRadius: BorderRadius.circular(15.0),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey),
+      borderSide: const BorderSide(color: Colors.grey),
       borderRadius: BorderRadius.circular(15.0),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue),
+      borderSide: const BorderSide(color: Colors.blue),
       borderRadius: BorderRadius.circular(15.0),
     ),
   );

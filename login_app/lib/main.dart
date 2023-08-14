@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:login_app/screens/login.dart';
 import 'package:login_app/screens/splash.dart';
 import 'package:login_app/screens/user_menu.dart';
-import 'package:login_app/widgets/decoration.dart';
 
 import 'auth_stream.dart';
+import 'exceptions/login_exception.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -63,9 +63,15 @@ class _AppState extends State<App> {
           }
 
           if (snapshot.hasError) {
-            return LoginScreen(authStream: authStream, error: snapshot.error);
+            LoginException exception = snapshot.error as LoginException;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(exception.message),
+                ),
+              );
+            });
           }
-
           return LoginScreen(authStream: authStream);
         },
       ),
