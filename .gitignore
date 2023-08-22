@@ -93,3 +93,7 @@ macos/Podfile.lock
 **/AndroidManifest.xml
 
 **/firebase_options.dart
+
+**/ios/Podfile.lock
+**/ios/Runner/
+**/ios/Runner.xcworkspace/
