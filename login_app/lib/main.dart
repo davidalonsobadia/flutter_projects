@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:login_app/auth_cubit.dart';
 import 'package:login_app/screens/login.dart';
 import 'package:login_app/screens/splash.dart';
 import 'package:login_app/screens/user_menu.dart';
 
-import 'auth_stream.dart';
+import 'auth_state.dart';
 import 'exceptions/login_exception.dart';
 import 'firebase_options.dart';
 
@@ -25,14 +27,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final AuthStream authStream = AuthStream();
-
-  @override
-  void dispose() {
-    authStream.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,25 +39,15 @@ class _AppState extends State<App> {
         ),
         textTheme: GoogleFonts.latoTextTheme(),
       ),
-      home: StreamBuilder(
-        stream: authStream.authControllerStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      home: BlocProvider(
+        create: (context) => AuthCubit(),
+        child: BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+          if (state is LoadingState) {
             return const SplashScreen();
-          }
-          if (snapshot.hasData) {
-            switch (snapshot.data) {
-              case AuthState.loading:
-                return const SplashScreen();
-              case AuthState.success:
-                return UserMenuScreen(authStream: authStream);
-              default:
-                return LoginScreen(authStream: authStream);
-            }
-          }
-
-          if (snapshot.hasError) {
-            LoginException exception = snapshot.error as LoginException;
+          } else if (state is SuccessState) {
+            return const UserMenuScreen();
+          } else if (state is ErrorState) {
+            LoginException exception = state.exception as LoginException;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -72,8 +56,8 @@ class _AppState extends State<App> {
               );
             });
           }
-          return LoginScreen(authStream: authStream);
-        },
+          return const LoginScreen();
+        }),
       ),
     );
   }

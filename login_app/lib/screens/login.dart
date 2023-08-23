@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:login_app/auth_cubit.dart';
 import 'package:login_app/screens/signup.dart';
 
-import '../auth_stream.dart';
 import '../widgets/decoration.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({
-    super.key,
-    required this.authStream,
-  });
-
-  final AuthStream authStream;
+  const LoginScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -32,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _form.currentState!.save();
 
-    await widget.authStream.signInWithEmailAndPassword(_enteredEmail, _enteredPassword);
+    await context.read<AuthCubit>().signInWithEmailAndPassword(_enteredEmail, _enteredPassword);
   }
 
   @override
@@ -158,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: widget.authStream.signInWithGoogle,
+                      onPressed: context.read<AuthCubit>().signInWithGoogle,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),

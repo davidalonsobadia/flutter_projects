@@ -29,6 +29,9 @@ class _SignUpState extends State<SignUpScreen> {
 
     if (!isValid) {
       // show error message if needed, because there are already message validations shown
+      setState(() {
+        _isAuthenticating = false;
+      });
       return;
     }
 

@@ -1,42 +1,32 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:login_app/exceptions/sign_in_exceptions.dart';
 import 'package:login_app/services/login_backend_client.dart';
 
+import 'auth_state.dart';
+import 'exceptions/sign_in_exceptions.dart';
 import 'models/user_data.dart';
 
-class AuthStream {
-  final _auth = FirebaseAuth.instance;
+final _auth = FirebaseAuth.instance;
 
-  final StreamController<AuthState> _authController = StreamController<AuthState>();
-
-  Stream<AuthState> get authControllerStream => _authController.stream;
-
-  AuthStream() {
-    _authController.add(AuthState.initial);
-  }
-
-  void dispose() {
-    _authController.close();
-  }
+class AuthCubit extends Cubit<AuthState> {
+  AuthCubit() : super(InitialState());
 
   Future<void> signInWithGoogle() async {
     try {
-      _authController.add(AuthState.loading);
+      emit(LoadingState());
       await signInWithProviderAndRegisterUser();
-      _authController.add(AuthState.success);
-    } catch (exception) {
-      _authController.addError(exception);
+      emit(SuccessState());
+    } on Exception catch (exception) {
+      emit(ErrorState(exception));
     }
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      _authController.add(AuthState.loading);
+      emit(LoadingState());
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _authController.add(AuthState.success);
+      emit(SuccessState());
     } on FirebaseAuthException catch (exception) {
       EmailPasswordSignInException emailPasswordException;
       if (exception.message != null) {
@@ -45,7 +35,7 @@ class AuthStream {
         emailPasswordException = EmailPasswordSignInException(
             'There was an error when siging in with Email and Password. Please try again later.');
       }
-      _authController.addError(emailPasswordException);
+      emit(ErrorState(emailPasswordException));
     }
   }
 
@@ -89,8 +79,6 @@ class AuthStream {
 
   void signOut() {
     _auth.signOut();
-    _authController.add(AuthState.initial);
+    emit(InitialState());
   }
 }
-
-enum AuthState { initial, loading, success }

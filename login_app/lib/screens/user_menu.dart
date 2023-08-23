@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:login_app/auth_stream.dart';
+import 'package:login_app/auth_cubit.dart';
 
 import '../models/user_data.dart';
 import '../services/login_backend_client.dart';
@@ -9,9 +10,7 @@ import '../services/login_backend_client.dart';
 final _auth = FirebaseAuth.instance;
 
 class UserMenuScreen extends StatefulWidget {
-  const UserMenuScreen({super.key, required this.authStream});
-
-  final AuthStream authStream;
+  const UserMenuScreen({super.key});
 
   @override
   State<UserMenuScreen> createState() => _UserMenuScreenState();
@@ -101,7 +100,7 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
         backgroundColor: Theme.of(context).colorScheme.background,
         actions: [
           IconButton(
-            onPressed: widget.authStream.signOut,
+            onPressed: context.read<AuthCubit>().signOut,
             icon: const Icon(Icons.exit_to_app),
             color: Theme.of(context).colorScheme.primary,
           ),
