@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Icon(Bootstrap.google),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: context.read<AuthCubit>().signInWithApple,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),

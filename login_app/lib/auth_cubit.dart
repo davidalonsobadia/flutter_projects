@@ -15,7 +15,17 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInWithGoogle() async {
     try {
       emit(LoadingState());
-      await signInWithProviderAndRegisterUser();
+      await signInWithGoogleProviderAndRegisterUser();
+      emit(SuccessState());
+    } on Exception catch (exception) {
+      emit(ErrorState(exception));
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    try {
+      emit(LoadingState());
+      await signInWithAppleProviderAndRegisterUser();
       emit(SuccessState());
     } on Exception catch (exception) {
       emit(ErrorState(exception));
@@ -39,7 +49,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signInWithProviderAndRegisterUser() async {
+  Future<void> signInWithAppleProviderAndRegisterUser() async {
+    // Before you can start integrating (or even testing) Sign in with Apple you need a paid membership to the Apple Developer Program.
+  }
+
+  Future<void> signInWithGoogleProviderAndRegisterUser() async {
     late String name, email, uid;
     try {
       GoogleSignIn googleSignIn = GoogleSignIn();
@@ -53,7 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
       AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
 
-      var result = (await _auth.signInWithCredential(credential));
+      var result = await _auth.signInWithCredential(credential);
       uid = result.user!.uid;
       email = googleSignInAccount.email;
       name = googleSignInAccount.displayName ?? 'user_name_not_provided';
@@ -62,8 +76,12 @@ class AuthCubit extends Cubit<AuthState> {
           'Error when Signing in Google Credentials. Please contact your administrator.');
     }
 
+    await registerUser(uid, name, email, 'google');
+  }
+
+  Future<void> registerUser(uid, name, email, provider) async {
     try {
-      final userData = UserData(id: uid, name: name, email: email, provider: 'google');
+      final userData = UserData(id: uid, name: name, email: email, provider: provider);
       LoginBackendClient loginBackendClient = LoginBackendClient('10.0.2.2:5000');
       final response = await loginBackendClient.registerUser(userData);
 

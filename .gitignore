@@ -97,3 +97,6 @@ macos/Podfile.lock
 **/ios/Podfile.lock
 **/ios/Runner/
 **/ios/Runner.xcworkspace/
+
+camera_gallery_app/
+login_app_riverpod/
