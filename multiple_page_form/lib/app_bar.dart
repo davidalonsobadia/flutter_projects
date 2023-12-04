@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:multiple_page_form/app_colors.dart';
 import 'package:multiple_page_form/constants/app_images.dart';
-import 'package:multiple_page_form/size_config.dart';
 
 AppBar appBar(context, title, Function()? back) {
   return AppBar(

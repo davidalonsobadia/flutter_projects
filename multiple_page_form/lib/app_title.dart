@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multiple_page_form/size_config.dart';
 
 class AppTitle extends StatelessWidget {
   const AppTitle({

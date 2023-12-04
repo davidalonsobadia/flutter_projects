@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multiple_page_form/app_body.dart';
 import 'package:multiple_page_form/app_scaffold.dart';
 import 'package:multiple_page_form/app_title.dart';
 import 'package:multiple_page_form/body_text.dart';
@@ -7,6 +6,8 @@ import 'package:multiple_page_form/filled_button.dart';
 import 'package:multiple_page_form/onboarding_arguments.dart';
 
 class FourScreen extends StatefulWidget {
+  const FourScreen({super.key});
+
   @override
   _FourScreenState createState() => _FourScreenState();
 }
@@ -18,7 +19,6 @@ class _FourScreenState extends State<FourScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
     final onboardingArgs = ModalRoute.of(context)!.settings.arguments as OnboardingArgument;
 
     return AppScaffold(
