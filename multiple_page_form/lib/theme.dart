@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +18,19 @@ ThemeData _buildTheme() {
   return base.copyWith(
     appBarTheme: const AppBarTheme(elevation: 0, systemOverlayStyle: SystemUiOverlayStyle.dark),
     primaryColor: AppColors.primary,
+    //     colorScheme: ColorScheme( //TODO: we should need to apply some colorScheme
+    //   brightness: brightness,
+    //   primary: primary,
+    //   onPrimary: onPrimary,
+    //   secondary: secondary,
+    //   onSecondary: onSecondary,
+    //   error: error,
+    //   onError: onError,
+    //   background: background,
+    //   onBackground: onBackground,
+    //   surface: surface,
+    //   onSurface: onSurface,
+    // ),
     errorColor: AppColors.error,
     buttonTheme: const ButtonThemeData(
       textTheme: ButtonTextTheme.normal,
