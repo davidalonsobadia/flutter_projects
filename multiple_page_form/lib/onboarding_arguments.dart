@@ -5,6 +5,7 @@ class OnboardingArgument {
   String? lastName;
   String? email;
   String? password;
+  String? country;
   List? terms;
   bool? isError;
 
@@ -17,6 +18,7 @@ class OnboardingArgument {
     this.password,
     this.terms,
     this.isError,
+    this.country,
   });
 }
 

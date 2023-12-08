@@ -33,6 +33,38 @@ class _FourScreenState extends State<FourScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AppTitle(title: "Select Country"),
+            ElevatedButton(
+              onPressed: () {
+                showCountryPicker(
+                  context: context,
+                  onSelect: (Country country) {
+                    setState(() {
+                      isContinueDisabled = false;
+                    });
+                    selectedCountry = country.displayName;
+                  },
+                );
+              },
+              child: const Text('Show country picker'),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SelectButton(title: 'Show country picker', isSelected: false),
+            const SizedBox(
+              height: 10,
+            ),
+            OutlinedButton(onPressed: () {}, child: Text('This is an outlinedButton')),
+            const SizedBox(
+              height: 10,
+            ),
+            AppTextButton(
+              label: 'label of app text button',
+              onTap: () {},
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             SelectCountryButton(
               text: 'Select Country',
               onPressed: () {
@@ -51,10 +83,7 @@ class _FourScreenState extends State<FourScreen> {
               height: 10,
             ),
             selectedCountry != null
-                ? Subtitle(
-                    margin: 10,
-                    title: 'Country Selected:  $selectedCountry',
-                  )
+                ? Subtitle(title: 'Country Selected: $selectedCountry')
                 : const SizedBox(
                     height: 10,
                   ),

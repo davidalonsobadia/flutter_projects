@@ -11,6 +11,7 @@ final ThemeData theme = _buildTheme();
 class AppColors {
   static const Color primary = Color(0xFF374957);
   static const Color error = Color(0xFFD2492B);
+  static const Color placeholder = Color(0xFFA2A2B1);
 }
 
 ThemeData _buildTheme() {

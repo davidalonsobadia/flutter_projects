@@ -30,8 +30,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppTitle(title: "Email title"),
-            BodyText(
+            const AppTitle(title: "Email title"),
+            const BodyText(
               topMargin: 0,
               title: "here we should add a short description about to add an email",
               bottomMargin: 16,

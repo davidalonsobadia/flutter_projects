@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multiple_page_form/screens/first_screen.dart';
 import 'package:multiple_page_form/route/app_route.dart';
 import 'package:multiple_page_form/screens/four_screen.dart';
+import 'package:multiple_page_form/screens/last_screen.dart';
 import 'package:multiple_page_form/screens/second_screen.dart';
 import 'package:multiple_page_form/screens/third_screen.dart';
 
@@ -24,7 +25,14 @@ class AppRouter {
         );
       case AppRoute.fourScreen:
         return MaterialPageRoute(
-          builder: (_) => FourScreen(),
+          builder: (_) => const FourScreen(),
+          settings: RouteSettings(
+            arguments: settings.arguments,
+          ),
+        );
+      case AppRoute.lastScreen:
+        return MaterialPageRoute(
+          builder: (_) => LastScreen(),
           settings: RouteSettings(
             arguments: settings.arguments,
           ),
