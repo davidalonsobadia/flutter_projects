@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_app/auth_cubit.dart';
+import 'package:login_app/business_logic/auth/auth_cubit.dart';
 import 'package:login_app/screens/signup.dart';
 
-import '../widgets/decoration.dart';
+import 'widgets/decoration.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import '../exceptions/login_backend_client_exceptions.dart';
+import 'exceptions/login_backend_client_exceptions.dart';
 import '../models/user_data.dart';
 
 class LoginBackendClient {

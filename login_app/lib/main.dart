@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:login_app/auth_cubit.dart';
+import 'package:login_app/business_logic/auth/auth_cubit.dart';
 import 'package:login_app/screens/login.dart';
 import 'package:login_app/screens/splash.dart';
 import 'package:login_app/screens/user_menu.dart';
 
-import 'auth_state.dart';
-import 'exceptions/login_exception.dart';
+import 'business_logic/auth/auth_state.dart';
+import 'services/exceptions/login_exception.dart';
 import 'firebase_options.dart';
 
 void main() async {

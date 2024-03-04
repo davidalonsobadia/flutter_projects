@@ -1,4 +1,4 @@
-import 'package:login_app/exceptions/login_exception.dart';
+import 'package:login_app/services/exceptions/login_exception.dart';
 
 class GoogleSignInException implements LoginException {
   @override

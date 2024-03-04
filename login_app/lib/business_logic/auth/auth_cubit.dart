@@ -4,8 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:login_app/services/login_backend_client.dart';
 
 import 'auth_state.dart';
-import 'exceptions/sign_in_exceptions.dart';
-import 'models/user_data.dart';
+import '../../services/exceptions/sign_in_exceptions.dart';
+import '../../models/user_data.dart';
 
 final _auth = FirebaseAuth.instance;
 
