@@ -82,8 +82,12 @@ class ImageGalleryBloc extends Bloc<ImageGalleryEvent, ImageGalleryState> {
     try {
       emit(ImageUploading(images: currentState.images, progress: 0.0));
 
+      await Future.delayed(Duration(seconds: 2));
+
       // Simulate upload progress (you can make this more sophisticated)
       emit(ImageUploading(images: currentState.images, progress: 0.5));
+
+      await Future.delayed(Duration(seconds: 3));
 
       final newImage = await ApiService.uploadImage(event.imageFile);
 
